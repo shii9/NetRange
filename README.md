@@ -18,12 +18,46 @@ Essential for network reconnaissance, security testing, and infrastructure analy
 
 ---
 
+## 📥 Installation
+
+```bash
+git clone https://github.com/shii9/NetRange.git && cd NetRange && sudo bash install.sh
+```
+
+<details>
+<summary><b>More installation options</b></summary>
+
+#### Remote install (no manual clone needed)
+
+```bash
+curl -sL https://raw.githubusercontent.com/shii9/NetRange/main/install.sh | sudo bash -s -- --remote
+```
+
+#### Local install (no sudo, user-only)
+
+```bash
+git clone https://github.com/shii9/NetRange.git && cd NetRange && bash install.sh --local
+```
+
+#### Verify installation
+
+```bash
+netrange --version
+```
+
+#### Uninstall
+
+```bash
+sudo bash install.sh --uninstall
+```
+
+</details>
+
+---
+
 ## 🚀 Quick Start
 
 ```bash
-# Install & verify
-bash install.sh
-
 # Expand a CIDR subnet
 netrange 172.16.10.0/24 -o subnet.txt
 

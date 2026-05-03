@@ -75,13 +75,19 @@ Before submitting a pull request:
 # Basic functionality
 netrange 192.168.1.0 192.168.1.10 -o test.txt
 
+# CIDR notation
+netrange 192.168.50.0/24 -o subnet.txt
+
 # Edge cases
-netrange 8.8.8.8 8.8.8.8 -o single.txt  # Single IP
-netrange 0.0.0.0 0.0.0.255 -o zeros.txt # Starting with zeros
+netrange 192.0.2.1 192.0.2.1 -o single.txt     # Single IP
+netrange 192.168.0.0 192.168.0.255 -o range.txt # Full /24
+
+# Stdout piping
+netrange 198.51.100.0/28 -q | wc -l
 
 # Error handling
 netrange 192.168.1.255 192.168.1.0 -o invalid.txt # Reverse range
-netrange 256.1.1.1 256.1.1.10 -o badip.txt # Invalid octets
+netrange 256.1.1.1 256.1.1.10 -o badip.txt        # Invalid octets
 ```
 
 ## Commit Message Guidelines
