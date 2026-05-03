@@ -31,8 +31,14 @@ netrange --version
 # Show available tasks
 make help
 
-# Run tests
+# Run quick smoke tests
 make test
+
+# Run full test suite (40+ tests)
+make test-full
+
+# Run performance benchmarks
+make bench
 
 # Check syntax
 make lint
@@ -41,46 +47,53 @@ make lint
 make clean
 ```
 
-### Manual Testing
-
-```bash
-# Test with different range sizes
-bash netrange.sh 0.0.0.0 0.0.0.255 -o /tmp/test_256.txt
-bash netrange.sh 10.0.0.0 10.0.255.255 -o /tmp/test_65k.txt
-
-# Test error handling
-bash netrange.sh invalid invalid -o /tmp/test.txt  # Should fail
-bash netrange.sh 192.168.1.255 192.168.1.0 -o /tmp/test.txt  # Should fail
-
-# Test piping
-bash netrange.sh 192.168.1.0 192.168.1.10 -o /tmp/ips.txt
-cat /tmp/ips.txt | wc -l  # Should be 11
-```
-
 ## Project Structure
 
 ```
 NetRange/
-├── netrange.sh           # Main tool
-├── install.sh            # Installation script
-├── README.md             # User documentation
-├── INSTALL.md            # Installation guide
-├── CHANGELOG.md          # Version history
-├── CONTRIBUTING.md       # Contributing guide
-├── CODE_OF_CONDUCT.md    # Community standards
-├── SECURITY.md           # Security policy
-├── LICENSE               # MIT License
-├── Makefile              # Development tasks
-├── .gitignore            # Git ignore rules
-├── .gitattributes        # Git attributes
-├── .editorconfig         # Editor config
+├── netrange.sh              # Main tool (Bash + embedded Python)
+├── install.sh               # Installation script
+├── comprehensive_test.py    # Full test suite (40+ test cases)
+├── test_large_range.py      # Performance benchmarks
+├── test_ranges.sh           # Shell integration tests
+├── Makefile                 # Development tasks
+├── README.md                # User documentation
+├── INSTALL.md               # Installation guide
+├── CHANGELOG.md             # Version history
+├── CONTRIBUTING.md          # Contributing guide
+├── CODE_OF_CONDUCT.md       # Community standards
+├── SECURITY.md              # Security policy
+├── LICENSE                  # MIT License
+├── .gitignore               # Git ignore rules
+├── .gitattributes           # Git attributes
+├── .editorconfig            # Editor config
 └── .github/
     ├── workflows/
-    │   └── test.yml      # CI/CD pipeline
+    │   └── test.yml         # CI/CD pipeline
     └── ISSUE_TEMPLATE/
         ├── bug_report.md
         └── feature_request.md
 ```
+
+## Architecture
+
+NetRange uses a **hybrid Bash + Python** architecture:
+
+1. **Bash shell** (`netrange.sh`) handles:
+   - Argument parsing and validation
+   - IP format validation via regex
+   - Dependency checking
+   - User-facing logging and help
+
+2. **Embedded Python** (heredoc in `netrange.sh`) handles:
+   - CIDR and range expansion via `ipaddress` stdlib
+   - IP exclusion filtering
+   - Buffered file I/O (8KB chunks)
+   - Output formatting (plain, CSV, JSON, nmap)
+   - Shuffle and deduplication
+   - Progress bar rendering
+
+This architecture lets us use Bash for clean CLI UX and Python for correct, fast IP arithmetic.
 
 ## Coding Standards
 
@@ -102,36 +115,60 @@ NetRange/
 
 ## Testing
 
-Before submitting a pull request:
+### Quick Smoke Tests
 
-1. **Syntax check**
-   ```bash
-   bash -n netrange.sh
-   bash -n install.sh
-   ```
+```bash
+make test
+```
 
-2. **Functional testing**
-   ```bash
-   make test
-   ```
+### Full Test Suite (40+ test cases)
 
-3. **Manual edge cases**
-   - Single IP ranges
-   - Large ranges (test performance)
-   - Invalid inputs
-   - Error conditions
+```bash
+make test-full
+# or
+python3 comprehensive_test.py
+```
 
-4. **Installation testing**
-   ```bash
-   # System-wide
-   bash install.sh
-   netrange --version
-   
-   # Local
-   bash install.sh --uninstall
-   bash install.sh --local
-   ~/.local/bin/netrange --version
-   ```
+Covers: CIDR, ranges, stdout piping, count-only, CSV/JSON/nmap formats,
+exclude ranges, shuffle, append, file input, unique mode, error handling,
+and large-range performance.
+
+### Shell Integration Tests
+
+```bash
+bash test_ranges.sh
+```
+
+### Performance Benchmarks
+
+```bash
+make bench
+# or
+python3 test_large_range.py
+```
+
+Tests /24 through /12 ranges and reports IPs/sec throughput.
+
+### Manual Testing
+
+```bash
+# Test CIDR notation
+bash netrange.sh 172.16.10.0/24 -o /tmp/test.txt
+wc -l /tmp/test.txt  # Should be 256
+
+# Test stdout piping
+bash netrange.sh 203.0.113.0/28 -q | wc -l  # Should be 16
+
+# Test exclude
+bash netrange.sh 10.0.0.0/24 -x 10.0.0.0/28 -q | wc -l  # Should be 240
+
+# Test count-only
+bash netrange.sh 172.16.0.0/12 -c -q  # Should be 1,048,576
+
+# Test error handling
+bash netrange.sh 192.168.1.255 192.168.1.0 -o /tmp/test.txt  # Should fail
+bash netrange.sh invalid -o /tmp/test.txt  # Should fail
+```
 
 ## Continuous Integration
 
@@ -144,7 +181,7 @@ All tests must pass before merging.
 
 ## Release Process
 
-1. Update version in `netrange.sh` (`-v|--version`)
+1. Update version in `netrange.sh` (`VERSION="x.y.z"`)
 2. Update `CHANGELOG.md` with changes
 3. Update `README.md` if needed
 4. Commit with message: `Release v1.x.x`

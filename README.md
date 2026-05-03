@@ -6,12 +6,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bash 4.0+](https://img.shields.io/badge/Bash-4.0%2B-brightgreen)](https://www.gnu.org/software/bash/)
 [![Python 3.6+](https://img.shields.io/badge/Python-3.6%2B-blue)](https://www.python.org)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/shii9/NetRange)
 
-**Professional tool for expanding IPv4 address ranges into discrete IP addresses.**
+**Professional tool for expanding IPv4 address ranges and CIDR notations into discrete IP addresses.**
 
 Essential for network reconnaissance, security testing, and infrastructure analysis.
 
-[Installation](#-installation) • [Usage](#-usage) • [Contributing](#-contributing) • [License](#-license)
+[Installation](#-installation) • [Usage](#-usage) • [Features](#-features) • [Contributing](#-contributing) • [License](#-license)
 
 </div>
 
@@ -23,83 +24,164 @@ Essential for network reconnaissance, security testing, and infrastructure analy
 # Install & verify
 bash install.sh
 
-# Expand a network
-netrange 192.168.1.0 192.168.1.255 -o output.txt
+# Expand a CIDR subnet
+netrange 172.16.10.0/24 -o subnet.txt
+
+# Expand a range
+netrange 10.50.0.0 10.50.255.255 -o targets.txt
+
+# Pipe directly into nmap (no file needed)
+netrange 203.0.113.0/28 | nmap -sn -iL -
+
+# Count IPs without generating
+netrange 172.16.0.0/12 -c
 
 # View help
 netrange --help
 ```
 
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| **CIDR Notation** | `netrange 172.16.10.0/24` — automatic subnet expansion |
+| **IP Ranges** | `netrange 10.50.0.0 10.50.255.255` — start-to-end expansion |
+| **Stdout Piping** | `netrange 203.0.113.0/28 \| nmap -sn -iL -` — no file required |
+| **Count-Only** | `netrange 172.16.0.0/12 -c` — instant IP count |
+| **Exclude Ranges** | `-x 10.0.0.0/24` — filter out specific subnets |
+| **Output Formats** | Plain, CSV, JSON, nmap-compatible |
+| **Shuffle Output** | `-s` — randomize IP order for stealth scanning |
+| **File Input** | `-f targets.txt` — batch processing from file |
+| **Append Mode** | `-a` — append to existing files |
+| **Deduplication** | `-u` — remove duplicate IPs across multiple inputs |
+| **Progress Bar** | `-p` — visual progress for large ranges |
+| **Buffered I/O** | Optimized writes for million-IP ranges |
+
 ## 📦 Contents
 
 | File | Purpose |
 |------|---------|
-| `install.sh` | Installation script |
-| `INSTALL.md` | Setup instructions |
 | `netrange.sh` | Main tool executable |
-| `LICENSE` | MIT License |
+| `install.sh` | Installation script (system-wide, local, verify, uninstall) |
+| `comprehensive_test.py` | Full test suite (40+ test cases) |
+| `test_large_range.py` | Performance benchmarks |
+| `test_ranges.sh` | Shell integration tests |
+| `Makefile` | Development tasks |
 | `README.md` | This file |
 
-## 📖 Documentation
+## 📖 Usage
 
-### Installation
-
-See [INSTALL.md](INSTALL.md) for:
-- System-wide installation
-- Local/user installation
-- Verification steps
-- Troubleshooting
-
-### Usage
-
-#### Basic Usage
+### Input Formats
 
 ```bash
-netrange <start-ip> <end-ip> -o <output-file>
-```
+# CIDR notation (most common)
+netrange 172.16.10.0/24 -o output.txt
 
-#### Examples
-
-```bash
-# Single /24 network
-netrange 192.168.1.0 192.168.1.255 -o subnet.txt
-
-# Larger /16 network
-netrange 10.0.0.0 10.0.255.255 -o classb.txt
+# IP range (start-end)
+netrange 10.50.0.0 10.50.0.255 -o output.txt
 
 # Single IP
-netrange 8.8.8.8 8.8.8.8 -o single.txt
+netrange 203.0.113.42 -o output.txt
+
+# From file (one target per line, supports comments)
+netrange -f targets.txt -o output.txt
 ```
 
-#### With Other Tools
+### Output Modes
+
+```bash
+# Stdout (default when no -o given) — pipe-friendly
+netrange 172.20.0.0/22 | wc -l
+
+# File output
+netrange 198.51.100.0/24 -o subnet.txt
+
+# Append to existing file
+netrange 10.10.1.0/24 -o targets.txt -a
+
+# Count-only (no output file)
+netrange 172.16.0.0/12 -c
+```
+
+### Output Formats
+
+```bash
+# Plain text — one IP per line (default)
+netrange 203.0.113.0/28 -o plain.txt
+
+# CSV — ip,index columns with header
+netrange 203.0.113.0/28 -F csv -o report.csv
+
+# JSON — array of IP strings
+netrange 203.0.113.0/28 -F json -o data.json
+
+# Nmap — comma-separated, single line
+netrange 203.0.113.0/28 -F nmap -o targets.nmap
+```
+
+### Advanced Features
+
+```bash
+# Exclude specific subnets from a range
+netrange 10.0.0.0/16 -x 10.0.0.0/24 -x 10.0.1.0/24 -o filtered.txt
+
+# Shuffle for randomized scanning
+netrange 172.20.0.0/22 -s -o random_targets.txt
+
+# Deduplicate overlapping inputs
+netrange -f overlapping_ranges.txt -u -o unique.txt
+
+# Progress bar for large ranges
+netrange 10.0.0.0/12 -o large.txt -p
+
+# Quiet mode (errors only)
+netrange 198.51.100.0/24 -o scan.txt -q
+```
+
+### Integration with Security Tools
 
 ```bash
 # Port scanning with nmap
-nmap -sn -iL output.txt
+netrange 172.16.10.0/24 | nmap -sn -iL -
 
-# Web testing with curl
-cat output.txt | parallel curl -s http://{}
+# Mass scanning with masscan
+netrange 10.50.0.0/16 -o targets.txt && masscan -iL targets.txt -p80,443
+
+# Parallel HTTP probing
+netrange 203.0.113.0/28 | parallel -j 20 curl -sk https://{}
 
 # Reverse DNS with dig
-cat output.txt | parallel dig +short -x {}
+netrange 198.51.100.0/24 | parallel dig +short -x {}
+
+# Web testing with httpx
+netrange 172.16.10.0/24 | httpx -silent -status-code
+
+# Subdomain brute-force preparation
+netrange 10.50.0.0/20 -F nmap | nmap -sL -iL -
 ```
 
-#### Output Format
-
-One IPv4 address per line, perfect for piping:
+### CLI Options
 
 ```
-192.168.1.0
-192.168.1.1
-192.168.1.2
-...
-192.168.1.255
+OPTIONS
+  -o, --output FILE      Output file path (default: stdout)
+  -f, --file FILE        Read targets from file (one per line)
+  -a, --append           Append to output file instead of overwriting
+  -x, --exclude RANGE    Exclude IPs matching CIDR or range (repeatable)
+  -c, --count            Only print the total IP count, do not generate
+  -q, --quiet            Suppress info messages (only output IPs or errors)
+  -p, --progress         Show progress bar for large ranges
+  -F, --format FMT       Output format: plain (default), csv, json, nmap
+  -s, --shuffle          Randomize output order
+  -u, --unique           Deduplicate IPs when using multiple inputs
+  -h, --help             Display this help message
+  -v, --version          Show version information
 ```
 
 ## ⚙️ Requirements
 
 - **Bash** 4.0 or newer
-- **Python** 3.6+ with ipaddress module
+- **Python** 3.6+ with ipaddress module (stdlib)
 - Read/write permissions in output directory
 
 ## 🔧 Troubleshooting
@@ -109,17 +191,32 @@ One IPv4 address per line, perfect for piping:
 | `Command not found` | Run `bash install.sh` first |
 | `python3 not found` | Install Python 3.6+ |
 | `Permission denied` | Check write permissions in target directory |
-| `Invalid IP error` | Use format: `XXX.XXX.XXX.XXX` |
+| `Invalid IP error` | Use format: `XXX.XXX.XXX.XXX` or `XXX.XXX.XXX.XXX/NN` |
 | `netrange: command not found` | Run `bash install.sh` to install, then `source ~/.bashrc` |
+
+## ⚡ Performance
+
+| Range Size | IP Count | Time | Speed |
+|------------|----------|------|-------|
+| /24 | 256 | < 0.1s | Instant |
+| /20 | 4,096 | < 0.1s | ~100K IP/s |
+| /16 | 65,536 | ~0.3s | ~200K IP/s |
+| /14 | 262,144 | ~1.5s | ~175K IP/s |
+| /12 | 1,048,576 | ~5s | ~200K IP/s |
+| /8 | 16,777,216 | ~60s | ~280K IP/s |
+
+Performance improved **2-3x** over v1.0 through buffered writes (8KB chunks).
 
 ## 💡 Use Cases
 
-- **Network Scanning** - Generate IP lists for nmap, masscan, and other scanners
-- **Security Testing** - Enumerate targets for vulnerability assessment and penetration testing
-- **DNS Reconnaissance** - Bulk reverse DNS lookups to map IP ranges
-- **Infrastructure Mapping** - Identify IP ranges for infrastructure documentation
-- **Web Scraping** - Generate lists for mass web requests and API testing
-- **IT Administration** - Asset discovery and inventory management
+- **Network Scanning** — Generate IP lists for nmap, masscan, and other scanners
+- **Security Testing** — Enumerate targets for vulnerability assessment and penetration testing
+- **DNS Reconnaissance** — Bulk reverse DNS lookups to map IP ranges
+- **Infrastructure Mapping** — Identify IP ranges for infrastructure documentation
+- **Web Scraping** — Generate lists for mass web requests and API testing
+- **IT Administration** — Asset discovery and inventory management
+- **Bug Bounty** — Expand scope CIDRs into target lists with exclusions
+- **Compliance Auditing** — Generate inventory lists for compliance checks
 
 ## 📚 Documentation
 
@@ -156,11 +253,17 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ## 💼 Professional Features
 
+- ✅ CIDR notation support (/8 through /32)
+- ✅ Stdout piping for tool chaining
+- ✅ Multiple output formats (plain, CSV, JSON, nmap)
+- ✅ Exclude ranges for filtered output
+- ✅ Shuffle mode for stealth scanning
+- ✅ Buffered I/O for large-range performance
+- ✅ Progress bar with ETA for long operations
+- ✅ File input for batch processing
+- ✅ Deduplication across multiple inputs
 - ✅ Comprehensive error handling and validation
-- ✅ Performance optimized for large ranges
 - ✅ Color-coded logging output
-- ✅ Integration examples for common tools
-- ✅ Extensive documentation and help
 - ✅ Continuous integration testing
 - ✅ Professional development workflow
 

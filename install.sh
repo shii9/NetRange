@@ -93,11 +93,9 @@ install_system_wide() {
     chmod 755 "$INSTALL_PATH"
   fi
 
-  # Create symlink without .sh extension
-  if [[ ! -w /usr/local/bin ]]; then
-    sudo ln -sf "$INSTALL_PATH" /usr/local/bin/netrange.sh 2>/dev/null || true
-  else
-    ln -sf "$INSTALL_PATH" /usr/local/bin/netrange.sh 2>/dev/null || true
+  # Verify the installed file is executable
+  if [[ -x "$INSTALL_PATH" ]]; then
+    log_success "Executable permissions verified"
   fi
 
   success "Installed to: $INSTALL_PATH"
@@ -133,8 +131,8 @@ verify_installation() {
 
   # Test execution
   info "Running sanity test..."
-  if netrange 192.168.1.1 192.168.1.3 -o /tmp/test_ips.txt 2>/dev/null; then
-    success "Sanity test passed"
+  if netrange 203.0.113.0/30 -o /tmp/test_ips.txt -q 2>/dev/null; then
+    success "Sanity test passed (4 IPs generated)"
     rm -f /tmp/test_ips.txt
   else
     warn "Sanity test produced warnings (normal if python3 issue)"
@@ -174,7 +172,7 @@ done
 
 cat << 'EOF'
 ╔════════════════════════════════════════════════════════════════════╗
-║          IP RANGE EXPANDER - Installation                          ║
+║          NetRange v2.0 — Installation                              ║
 ╚════════════════════════════════════════════════════════════════════╝
 EOF
 
