@@ -1,6 +1,21 @@
 # NetRange
 
-Professional tool for expanding IPv4 address ranges into discrete IP addresses. Essential for network reconnaissance, security testing, and infrastructure analysis.
+<div align="center">
+
+[![Tests](https://github.com/shii9/NetRange/actions/workflows/test.yml/badge.svg)](https://github.com/shii9/NetRange/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Bash 4.0+](https://img.shields.io/badge/Bash-4.0%2B-brightgreen)](https://www.gnu.org/software/bash/)
+[![Python 3.6+](https://img.shields.io/badge/Python-3.6%2B-blue)](https://www.python.org)
+
+**Professional tool for expanding IPv4 address ranges into discrete IP addresses.**
+
+Essential for network reconnaissance, security testing, and infrastructure analysis.
+
+[Installation](#-installation) • [Usage](#-usage) • [Contributing](#-contributing) • [License](#-license)
+
+</div>
+
+---
 
 ## 🚀 Quick Start
 
@@ -95,15 +110,43 @@ One IPv4 address per line, perfect for piping:
 | `python3 not found` | Install Python 3.6+ |
 | `Permission denied` | Check write permissions in target directory |
 | `Invalid IP error` | Use format: `XXX.XXX.XXX.XXX` |
-| `netrange: command not found` | Run `source ~/.bashrc` or install again |
+| `netrange: command not found` | Run `bash install.sh` to install, then `source ~/.bashrc` |
 
 ## 💡 Use Cases
 
-- **Network Scanning** - Generate IP lists for nmap, masscan
-- **Security Testing** - Enumerate targets for vulnerability assessment
-- **DNS Reconnaissance** - Bulk reverse DNS lookups
-- **Infrastructure Mapping** - Identify IP ranges for infrastructure
-- **Web Scraping** - Generate list for mass web requests
+- **Network Scanning** - Generate IP lists for nmap, masscan, and other scanners
+- **Security Testing** - Enumerate targets for vulnerability assessment and penetration testing
+- **DNS Reconnaissance** - Bulk reverse DNS lookups to map IP ranges
+- **Infrastructure Mapping** - Identify IP ranges for infrastructure documentation
+- **Web Scraping** - Generate lists for mass web requests and API testing
+- **IT Administration** - Asset discovery and inventory management
+
+## 📚 Documentation
+
+- [Installation Guide](INSTALL.md) - Detailed setup instructions
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute to the project
+- [Development Guide](DEVELOPMENT.md) - Development setup and workflow
+- [Code of Conduct](CODE_OF_CONDUCT.md) - Community guidelines
+- [Security Policy](SECURITY.md) - Reporting security vulnerabilities
+- [Changelog](CHANGELOG.md) - Version history and changes
+
+## ⚠️ Legal Notice
+
+**Authorized use only.** Only expand IP ranges you own or have explicit written permission to test. Unauthorized network scanning may violate laws including the Computer Fraud and Abuse Act (CFAA) in the United States and similar legislation in other jurisdictions.
+
+See [LICENSE](LICENSE) and [SECURITY.md](SECURITY.md) for full legal disclaimers.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Reporting bugs
+- Suggesting features
+- Submitting pull requests
+- Code standards
+
+## 🔒 Security
+
+For security concerns, please see [SECURITY.md](SECURITY.md). Do not open public issues for security vulnerabilities.
 
 ## 📄 License
 
@@ -111,4 +154,22 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ---
 
+## 💼 Professional Features
+
+- ✅ Comprehensive error handling and validation
+- ✅ Performance optimized for large ranges
+- ✅ Color-coded logging output
+- ✅ Integration examples for common tools
+- ✅ Extensive documentation and help
+- ✅ Continuous integration testing
+- ✅ Professional development workflow
+
+---
+
+<div align="center">
+
 **Professional. Focused. Efficient.**
+
+[GitHub](https://github.com/shii9/NetRange) • [Issues](https://github.com/shii9/NetRange/issues) • [Discussions](https://github.com/shii9/NetRange/discussions)
+
+</div>

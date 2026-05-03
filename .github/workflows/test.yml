@@ -1,0 +1,63 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.6', '3.9', '3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Check Bash syntax
+      run: |
+        bash -n netrange.sh
+        bash -n install.sh
+    
+    - name: Verify dependencies
+      run: |
+        python3 --version
+        python3 -c "import ipaddress; print('ipaddress module available')"
+    
+    - name: Run tests
+      run: |
+        # Test single IP
+        bash netrange.sh 8.8.8.8 8.8.8.8 -o test_single.txt
+        [ -f test_single.txt ] && echo "✓ Single IP test passed" || exit 1
+        
+        # Test range
+        bash netrange.sh 192.168.1.0 192.168.1.10 -o test_range.txt
+        lines=$(wc -l < test_range.txt)
+        [ "$lines" -eq 11 ] && echo "✓ Range test passed ($lines IPs)" || exit 1
+        
+        # Test help
+        bash netrange.sh --help && echo "✓ Help works" || exit 1
+        
+        # Test version
+        bash netrange.sh --version && echo "✓ Version command works" || exit 1
+    
+    - name: Test error handling
+      run: |
+        # Reverse range should fail
+        bash netrange.sh 192.168.1.255 192.168.1.0 -o test_error.txt 2>/dev/null && exit 1 || echo "✓ Error handling works"
+        
+        # Invalid IP should fail
+        bash netrange.sh 256.1.1.1 256.1.1.10 -o test_invalid.txt 2>/dev/null && exit 1 || echo "✓ Invalid IP rejection works"
+    
+    - name: Cleanup
+      if: always()
+      run: |
+        rm -f test_*.txt

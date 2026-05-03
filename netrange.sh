@@ -131,7 +131,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     -v|--version)
-      echo "ip-expander v1.0.0"
+      echo "NetRange v1.0.0"
       exit 0
       ;;
     -o|--output)
