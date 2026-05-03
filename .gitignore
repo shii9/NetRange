@@ -114,4 +114,6 @@ Thumbs.db
 # Local output files (can be created during tool usage)
 output.txt
 *.txt.tmp
+test_*.txt
+bench_*.txt
 results/
