@@ -186,7 +186,7 @@ try:
     with outfile.open("w", encoding="utf-8") as f:
         for ip_int in range(int(start), int(end) + 1):
             f.write(str(ipaddress.IPv4Address(ip_int)) + "\n")
-    success(f"Generated {count:,} IP addresses → {outfile}")
+    print(f"[+] Generated {count:,} IP addresses → {outfile}")
 except IOError as e:
     print(f"[!] ERROR: Failed to write output file: {e}", file=sys.stderr)
     sys.exit(1)
