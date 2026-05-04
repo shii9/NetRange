@@ -176,7 +176,7 @@ verify_installation() {
 
   # Test execution
   info "Running sanity test..."
-  if netrange 127.0.4.0/30 -o /tmp/test_ips.txt -q 2>/dev/null; then
+  if netrange 127.0.4.0/30 -o /tmp/test_ips.txt -q; then
     local count
     count=$(wc -l < /tmp/test_ips.txt)
     success "Sanity test passed ($count IPs generated)"
@@ -223,11 +223,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-cat << EOF
-${CYAN}╔════════════════════════════════════════════════════════════════════╗
-║          ${BOLD}NetRange v2.1${NC}${CYAN} — Installation                              ║
-╚════════════════════════════════════════════════════════════════════╝${NC}
-EOF
+printf "${CYAN}╔════════════════════════════════════════════════════════════════════╗\n"
+printf "║          ${BOLD}NetRange v2.1${NC}${CYAN} — Installation                              ║\n"
+printf "╚════════════════════════════════════════════════════════════════════╝${NC}\n"
 
 if [[ $UNINSTALL_MODE == true ]]; then
   uninstall
