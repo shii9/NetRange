@@ -35,7 +35,6 @@ USAGE
 INPUT FORMATS
   CIDR notation          netrange 172.16.0.0/24
   IP range               netrange 127.0.2.0 127.0.2.255
-  Single IP              netrange 127.0.3.42
   From file              netrange -f targets.txt
 
 OPTIONS
@@ -57,31 +56,10 @@ EXAMPLES
   netrange 127.0.1.0/24 -o subnet.txt
 
   # Large range — expand a /12 block with progress
-  netrange 127.0.2.0 127.0.2.255 -o scan_targets.txt -p
+  netrange 127.0.2.0 127.0.2.255 -o scan_targets.txt
 
-  # Pipe directly into nmap (no file needed)
-  netrange 127.0.3.0/28 | nmap -sn -iL -
-
-  # Count IPs without generating
-  netrange 127.0.1.0/24 -c
-
-  # CIDR with exclusions
-  netrange 127.0.2.0/24 -x 127.0.2.0/28 -x 127.0.2.16/28 -o filtered.txt
-
-  # Multiple inputs from file
-  netrange -f targets.txt -o all_ips.txt -u
-
-  # CSV format output
-  netrange 192.168.50.0/28 -F csv -o report.csv
-
-  # JSON format output
-  netrange 192.168.50.0/28 -F json -o report.json
-
-  # Shuffle output for randomized scanning
-  netrange 127.0.2.0/24 -s -o random_targets.txt
-
-  # Append results to existing file
-  netrange 127.0.1.0/24 -o targets.txt -a
+  # From File — expand all ip's inside file
+  netrange -f targets.txt -o all_ips.txt
 
 OUTPUT FORMATS
   plain   One IP per line (default, pipe-friendly)
@@ -94,34 +72,6 @@ PERFORMANCE
   /16 network   (65K IPs)      : ~0.3s  (buffered writes)
   /12 network   (1M IPs)       : ~5s    (buffered writes)
   /8  network   (16M IPs)      : ~60s   (buffered writes)
-
-INTEGRATION
-  # With nmap (direct pipe)
-  netrange 127.0.1.0/24 | nmap -sn -iL -
-
-  # With masscan
-  netrange 127.0.2.0/24 -o targets.txt && masscan -iL targets.txt -p80,443
-
-  # With curl (parallel HTTP probing)
-  netrange 127.0.3.0/28 | parallel -j 20 curl -sk https://{}
-
-  # With dig (bulk reverse DNS)
-  netrange 127.0.2.0/24 | parallel dig +short -x {}
-
-  # Count before scanning
-  netrange 127.0.1.0/24 -c   # → 1,048,576 IPs
-
-REQUIREMENTS
-  • Bash 4.0 or later
-  • Python 3.6 or later
-  • Write permissions to output directory (if using -o)
-
-LEGAL NOTICE
-  ⚠️  Authorized use only. Only expand IP ranges you own or have explicit
-      permission to test. Unauthorized scanning may violate laws.
-
-For more information, see README.md or visit the project documentation.
-EOF
 }
 
 # ============================================================================
