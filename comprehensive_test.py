@@ -57,39 +57,39 @@ print("═" * 65)
 # ─── Test Group 1: Basic IP Range ────────────────────────────────────────────
 print("\n▸ Basic IP Range Expansion")
 
-rc, out, err = run("192.0.2.0 172.16.10.15 -o test_basic.txt -q")
+rc, out, err = run("127.0.1.0 172.16.10.15 -o test_basic.txt -q")
 test("Range expansion exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_basic.txt").read_text().strip().splitlines()
     test("Generates correct count (16 IPs)", len(lines) == 16, f"got {len(lines)}")
-    test("First IP is 192.0.2.0", lines[0] == "192.0.2.0", lines[0])
+    test("First IP is 127.0.1.0", lines[0] == "127.0.1.0", lines[0])
     test("Last IP is 172.16.10.15", lines[-1] == "172.16.10.15", lines[-1])
 cleanup("test_basic.txt")
 
 # ─── Test Group 2: Single IP ────────────────────────────────────────────────
 print("\n▸ Single IP")
 
-rc, out, err = run("203.0.113.42 -o test_single.txt -q")
+rc, out, err = run("127.0.3.42 -o test_single.txt -q")
 test("Single IP exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_single.txt").read_text().strip().splitlines()
     test("Generates exactly 1 IP", len(lines) == 1, f"got {len(lines)}")
-    test("IP is 203.0.113.42", lines[0] == "203.0.113.42", lines[0])
+    test("IP is 127.0.3.42", lines[0] == "127.0.3.42", lines[0])
 cleanup("test_single.txt")
 
 # ─── Test Group 3: CIDR Notation ────────────────────────────────────────────
 print("\n▸ CIDR Notation")
 
-rc, out, err = run("198.51.100.0/24 -o test_cidr24.txt -q")
+rc, out, err = run("127.0.2.0/24 -o test_cidr24.txt -q")
 test("CIDR /24 exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_cidr24.txt").read_text().strip().splitlines()
     test("/24 generates 256 IPs", len(lines) == 256, f"got {len(lines)}")
-    test("First IP is 198.51.100.0", lines[0] == "198.51.100.0", lines[0])
-    test("Last IP is 198.51.100.255", lines[-1] == "198.51.100.255", lines[-1])
+    test("First IP is 127.0.2.0", lines[0] == "127.0.2.0", lines[0])
+    test("Last IP is 127.0.2.255", lines[-1] == "127.0.2.255", lines[-1])
 cleanup("test_cidr24.txt")
 
-rc, out, err = run("198.51.100.0/28 -o test_cidr28.txt -q")
+rc, out, err = run("127.0.2.0/28 -o test_cidr28.txt -q")
 test("CIDR /28 exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_cidr28.txt").read_text().strip().splitlines()
@@ -106,7 +106,7 @@ cleanup("test_cidr32.txt")
 # ─── Test Group 4: Stdout Piping ────────────────────────────────────────────
 print("\n▸ Stdout Piping (no -o)")
 
-rc, out, err = run("198.51.100.0/30 -q")
+rc, out, err = run("127.0.2.0/30 -q")
 test("Stdout piping exits cleanly", rc == 0, err)
 lines = out.strip().splitlines()
 test("Stdout has 4 IPs", len(lines) == 4, f"got {len(lines)}")
@@ -114,42 +114,42 @@ test("Stdout has 4 IPs", len(lines) == 4, f"got {len(lines)}")
 # ─── Test Group 5: Count-Only Mode ──────────────────────────────────────────
 print("\n▸ Count-Only Mode (-c)")
 
-rc, out, err = run("198.51.100.0/24 -c -q")
+rc, out, err = run("127.0.2.0/24 -c -q")
 test("Count-only exits cleanly", rc == 0, err)
 test("Count is 65,536", out.strip() == "65,536", f"got '{out.strip()}'")
 
-rc, out, err = run("192.0.2.0/24 -c -q")
+rc, out, err = run("127.0.1.0/24 -c -q")
 test("Large CIDR count works", rc == 0, err)
 test("Count is 1,048,576", out.strip() == "1,048,576", f"got '{out.strip()}'")
 
 # ─── Test Group 6: CSV Format ───────────────────────────────────────────────
 print("\n▸ CSV Format (-F csv)")
 
-rc, out, err = run("203.0.113.0/30 -F csv -o test_csv.txt -q")
+rc, out, err = run("127.0.3.0/30 -F csv -o test_csv.txt -q")
 test("CSV format exits cleanly", rc == 0, err)
 if rc == 0:
     content = Path("test_csv.txt").read_text().strip().splitlines()
     test("CSV has header row", content[0] == "ip,index", content[0])
     test("CSV data row count is 4", len(content) - 1 == 4, f"got {len(content)-1}")
-    test("First data row correct", content[1] == "203.0.113.0,1", content[1])
+    test("First data row correct", content[1] == "127.0.3.0,1", content[1])
 cleanup("test_csv.txt")
 
 # ─── Test Group 7: JSON Format ──────────────────────────────────────────────
 print("\n▸ JSON Format (-F json)")
 
-rc, out, err = run("203.0.113.0/30 -F json -o test_json.txt -q")
+rc, out, err = run("127.0.3.0/30 -F json -o test_json.txt -q")
 test("JSON format exits cleanly", rc == 0, err)
 if rc == 0:
     data = json.loads(Path("test_json.txt").read_text())
     test("JSON is a list", isinstance(data, list))
     test("JSON has 4 IPs", len(data) == 4, f"got {len(data)}")
-    test("First IP in JSON", data[0] == "203.0.113.0", data[0])
+    test("First IP in JSON", data[0] == "127.0.3.0", data[0])
 cleanup("test_json.txt")
 
 # ─── Test Group 8: Nmap Format ──────────────────────────────────────────────
 print("\n▸ Nmap Format (-F nmap)")
 
-rc, out, err = run("203.0.113.0/30 -F nmap -q")
+rc, out, err = run("127.0.3.0/30 -F nmap -q")
 test("Nmap format exits cleanly", rc == 0, err)
 ips = out.strip().split(",")
 test("Nmap output has 4 IPs", len(ips) == 4, f"got {len(ips)}")
@@ -157,7 +157,7 @@ test("Nmap output has 4 IPs", len(ips) == 4, f"got {len(ips)}")
 # ─── Test Group 9: Exclude Ranges ───────────────────────────────────────────
 print("\n▸ Exclude Ranges (-x)")
 
-rc, out, err = run("192.0.2.0/24 -x 192.0.2.0/28 -o test_excl.txt -q")
+rc, out, err = run("127.0.1.0/24 -x 127.0.1.0/28 -o test_excl.txt -q")
 test("Exclude exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_excl.txt").read_text().strip().splitlines()
@@ -170,21 +170,21 @@ cleanup("test_excl.txt")
 # ─── Test Group 10: Shuffle ─────────────────────────────────────────────────
 print("\n▸ Shuffle Mode (-s)")
 
-rc, out1, err = run("192.0.2.0/24 -o test_shuf.txt -q -s")
+rc, out1, err = run("127.0.1.0/24 -o test_shuf.txt -q -s")
 test("Shuffle exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_shuf.txt").read_text().strip().splitlines()
     test("Shuffle still has 256 IPs", len(lines) == 256, f"got {len(lines)}")
     # Check that order differs from sequential (very unlikely to match)
-    sequential = [str(ipaddress.IPv4Address(int(ipaddress.IPv4Address("192.0.2.0")) + i)) for i in range(256)]
+    sequential = [str(ipaddress.IPv4Address(int(ipaddress.IPv4Address("127.0.1.0")) + i)) for i in range(256)]
     test("Order is shuffled", lines != sequential)
 cleanup("test_shuf.txt")
 
 # ─── Test Group 11: Append Mode ─────────────────────────────────────────────
 print("\n▸ Append Mode (-a)")
 
-run("203.0.113.0/30 -o test_append.txt -q")
-run("203.0.113.4/30 -o test_append.txt -q -a")
+run("127.0.3.0/30 -o test_append.txt -q")
+run("127.0.3.4/30 -o test_append.txt -q -a")
 lines = Path("test_append.txt").read_text().strip().splitlines()
 test("Append combines both ranges", len(lines) == 8, f"got {len(lines)}")
 cleanup("test_append.txt")
@@ -192,7 +192,7 @@ cleanup("test_append.txt")
 # ─── Test Group 12: File Input ───────────────────────────────────────────────
 print("\n▸ File Input (-f)")
 
-Path("test_input.txt").write_text("192.0.2.0/30\n# comment line\n203.0.113.0/30\n")
+Path("test_input.txt").write_text("127.0.1.0/30\n# comment line\n127.0.3.0/30\n")
 rc, out, err = run("-f test_input.txt -o test_filein.txt -q")
 test("File input exits cleanly", rc == 0, err)
 if rc == 0:
@@ -203,7 +203,7 @@ cleanup("test_input.txt", "test_filein.txt")
 # ─── Test Group 13: Unique Mode ─────────────────────────────────────────────
 print("\n▸ Unique Mode (-u)")
 
-Path("test_dupes.txt").write_text("203.0.113.0/30\n203.0.113.0/30\n")
+Path("test_dupes.txt").write_text("127.0.3.0/30\n127.0.3.0/30\n")
 rc, out, err = run("-f test_dupes.txt -o test_uniq.txt -q -u")
 test("Unique mode exits cleanly", rc == 0, err)
 if rc == 0:
@@ -230,7 +230,7 @@ cleanup("test_err.txt")
 print("\n▸ Large Range Performance")
 
 start_time = time.time()
-rc, out, err = run("198.51.100.0/24 -o test_perf.txt -q")
+rc, out, err = run("127.0.2.0/24 -o test_perf.txt -q")
 elapsed = time.time() - start_time
 test("Large /16 range completes", rc == 0, err)
 if rc == 0:

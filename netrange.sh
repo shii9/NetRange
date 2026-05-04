@@ -34,8 +34,8 @@ USAGE
 
 INPUT FORMATS
   CIDR notation          netrange 172.16.0.0/24
-  IP range               netrange 198.51.100.0 198.51.100.255
-  Single IP              netrange 203.0.113.42
+  IP range               netrange 127.0.2.0 127.0.2.255
+  Single IP              netrange 127.0.3.42
   From file              netrange -f targets.txt
 
 OPTIONS
@@ -54,19 +54,19 @@ OPTIONS
 
 EXAMPLES
   # CIDR — expand a /24 subnet
-  netrange 192.0.2.0/24 -o subnet.txt
+  netrange 127.0.1.0/24 -o subnet.txt
 
   # Large range — expand a /12 block with progress
-  netrange 198.51.100.0 198.51.100.255 -o scan_targets.txt -p
+  netrange 127.0.2.0 127.0.2.255 -o scan_targets.txt -p
 
   # Pipe directly into nmap (no file needed)
-  netrange 203.0.113.0/28 | nmap -sn -iL -
+  netrange 127.0.3.0/28 | nmap -sn -iL -
 
   # Count IPs without generating
-  netrange 192.0.2.0/24 -c
+  netrange 127.0.1.0/24 -c
 
   # CIDR with exclusions
-  netrange 198.51.100.0/24 -x 198.51.100.0/28 -x 198.51.100.16/28 -o filtered.txt
+  netrange 127.0.2.0/24 -x 127.0.2.0/28 -x 127.0.2.16/28 -o filtered.txt
 
   # Multiple inputs from file
   netrange -f targets.txt -o all_ips.txt -u
@@ -78,10 +78,10 @@ EXAMPLES
   netrange 192.168.50.0/28 -F json -o report.json
 
   # Shuffle output for randomized scanning
-  netrange 198.51.100.0/24 -s -o random_targets.txt
+  netrange 127.0.2.0/24 -s -o random_targets.txt
 
   # Append results to existing file
-  netrange 192.0.2.0/24 -o targets.txt -a
+  netrange 127.0.1.0/24 -o targets.txt -a
 
 OUTPUT FORMATS
   plain   One IP per line (default, pipe-friendly)
@@ -97,19 +97,19 @@ PERFORMANCE
 
 INTEGRATION
   # With nmap (direct pipe)
-  netrange 192.0.2.0/24 | nmap -sn -iL -
+  netrange 127.0.1.0/24 | nmap -sn -iL -
 
   # With masscan
-  netrange 198.51.100.0/24 -o targets.txt && masscan -iL targets.txt -p80,443
+  netrange 127.0.2.0/24 -o targets.txt && masscan -iL targets.txt -p80,443
 
   # With curl (parallel HTTP probing)
-  netrange 203.0.113.0/28 | parallel -j 20 curl -sk https://{}
+  netrange 127.0.3.0/28 | parallel -j 20 curl -sk https://{}
 
   # With dig (bulk reverse DNS)
-  netrange 198.51.100.0/24 | parallel dig +short -x {}
+  netrange 127.0.2.0/24 | parallel dig +short -x {}
 
   # Count before scanning
-  netrange 192.0.2.0/24 -c   # → 1,048,576 IPs
+  netrange 127.0.1.0/24 -c   # → 1,048,576 IPs
 
 REQUIREMENTS
   • Bash 4.0 or later
