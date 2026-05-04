@@ -22,10 +22,10 @@ VERSION="2.0.0"
 show_help() {
   cat << 'EOF'
 ╔════════════════════════════════════════════════════════════════════════════╗
-║                    NetRange v2.0 — Professional Tool                     ║
-║                                                                          ║
-║  Expands IPv4 ranges & CIDR notations into individual IP addresses for   ║
-║  security testing, reconnaissance, and infrastructure analysis.          ║
+║                    NetRange v2.0 — Discover IP's                           ║
+║                                                                            ║
+║  Expands IPv4 ranges & CIDR notations into individual IP addresses for     ║
+║  security testing, reconnaissance, and infrastructure analysis.            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 
 USAGE
