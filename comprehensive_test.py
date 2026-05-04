@@ -57,12 +57,12 @@ print("═" * 65)
 # ─── Test Group 1: Basic IP Range ────────────────────────────────────────────
 print("\n▸ Basic IP Range Expansion")
 
-rc, out, err = run("172.16.10.0 172.16.10.15 -o test_basic.txt -q")
+rc, out, err = run("192.0.2.0 172.16.10.15 -o test_basic.txt -q")
 test("Range expansion exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_basic.txt").read_text().strip().splitlines()
     test("Generates correct count (16 IPs)", len(lines) == 16, f"got {len(lines)}")
-    test("First IP is 172.16.10.0", lines[0] == "172.16.10.0", lines[0])
+    test("First IP is 192.0.2.0", lines[0] == "192.0.2.0", lines[0])
     test("Last IP is 172.16.10.15", lines[-1] == "172.16.10.15", lines[-1])
 cleanup("test_basic.txt")
 
@@ -89,7 +89,7 @@ if rc == 0:
     test("Last IP is 198.51.100.255", lines[-1] == "198.51.100.255", lines[-1])
 cleanup("test_cidr24.txt")
 
-rc, out, err = run("10.50.0.0/28 -o test_cidr28.txt -q")
+rc, out, err = run("198.51.100.0/28 -o test_cidr28.txt -q")
 test("CIDR /28 exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_cidr28.txt").read_text().strip().splitlines()
@@ -106,7 +106,7 @@ cleanup("test_cidr32.txt")
 # ─── Test Group 4: Stdout Piping ────────────────────────────────────────────
 print("\n▸ Stdout Piping (no -o)")
 
-rc, out, err = run("172.20.0.0/30 -q")
+rc, out, err = run("198.51.100.0/30 -q")
 test("Stdout piping exits cleanly", rc == 0, err)
 lines = out.strip().splitlines()
 test("Stdout has 4 IPs", len(lines) == 4, f"got {len(lines)}")
@@ -114,11 +114,11 @@ test("Stdout has 4 IPs", len(lines) == 4, f"got {len(lines)}")
 # ─── Test Group 5: Count-Only Mode ──────────────────────────────────────────
 print("\n▸ Count-Only Mode (-c)")
 
-rc, out, err = run("10.50.0.0/16 -c -q")
+rc, out, err = run("198.51.100.0/24 -c -q")
 test("Count-only exits cleanly", rc == 0, err)
 test("Count is 65,536", out.strip() == "65,536", f"got '{out.strip()}'")
 
-rc, out, err = run("172.16.0.0/12 -c -q")
+rc, out, err = run("192.0.2.0/24 -c -q")
 test("Large CIDR count works", rc == 0, err)
 test("Count is 1,048,576", out.strip() == "1,048,576", f"got '{out.strip()}'")
 
@@ -157,7 +157,7 @@ test("Nmap output has 4 IPs", len(ips) == 4, f"got {len(ips)}")
 # ─── Test Group 9: Exclude Ranges ───────────────────────────────────────────
 print("\n▸ Exclude Ranges (-x)")
 
-rc, out, err = run("10.0.0.0/24 -x 10.0.0.0/28 -o test_excl.txt -q")
+rc, out, err = run("192.0.2.0/24 -x 192.0.2.0/28 -o test_excl.txt -q")
 test("Exclude exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_excl.txt").read_text().strip().splitlines()
@@ -170,13 +170,13 @@ cleanup("test_excl.txt")
 # ─── Test Group 10: Shuffle ─────────────────────────────────────────────────
 print("\n▸ Shuffle Mode (-s)")
 
-rc, out1, err = run("172.16.10.0/24 -o test_shuf.txt -q -s")
+rc, out1, err = run("192.0.2.0/24 -o test_shuf.txt -q -s")
 test("Shuffle exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_shuf.txt").read_text().strip().splitlines()
     test("Shuffle still has 256 IPs", len(lines) == 256, f"got {len(lines)}")
     # Check that order differs from sequential (very unlikely to match)
-    sequential = [str(ipaddress.IPv4Address(int(ipaddress.IPv4Address("172.16.10.0")) + i)) for i in range(256)]
+    sequential = [str(ipaddress.IPv4Address(int(ipaddress.IPv4Address("192.0.2.0")) + i)) for i in range(256)]
     test("Order is shuffled", lines != sequential)
 cleanup("test_shuf.txt")
 
@@ -192,7 +192,7 @@ cleanup("test_append.txt")
 # ─── Test Group 12: File Input ───────────────────────────────────────────────
 print("\n▸ File Input (-f)")
 
-Path("test_input.txt").write_text("172.16.10.0/30\n# comment line\n203.0.113.0/30\n")
+Path("test_input.txt").write_text("192.0.2.0/30\n# comment line\n203.0.113.0/30\n")
 rc, out, err = run("-f test_input.txt -o test_filein.txt -q")
 test("File input exits cleanly", rc == 0, err)
 if rc == 0:
@@ -230,7 +230,7 @@ cleanup("test_err.txt")
 print("\n▸ Large Range Performance")
 
 start_time = time.time()
-rc, out, err = run("10.50.0.0/16 -o test_perf.txt -q")
+rc, out, err = run("198.51.100.0/24 -o test_perf.txt -q")
 elapsed = time.time() - start_time
 test("Large /16 range completes", rc == 0, err)
 if rc == 0:

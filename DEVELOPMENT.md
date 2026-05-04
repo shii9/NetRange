@@ -153,17 +153,17 @@ Tests /24 through /12 ranges and reports IPs/sec throughput.
 
 ```bash
 # Test CIDR notation
-bash netrange.sh 172.16.10.0/24 -o /tmp/test.txt
+bash netrange.sh 192.0.2.0/24 -o /tmp/test.txt
 wc -l /tmp/test.txt  # Should be 256
 
 # Test stdout piping
 bash netrange.sh 203.0.113.0/28 -q | wc -l  # Should be 16
 
 # Test exclude
-bash netrange.sh 10.0.0.0/24 -x 10.0.0.0/28 -q | wc -l  # Should be 240
+bash netrange.sh 192.0.2.0/24 -x 192.0.2.0/28 -q | wc -l  # Should be 240
 
 # Test count-only
-bash netrange.sh 172.16.0.0/12 -c -q  # Should be 1,048,576
+bash netrange.sh 192.0.2.0/24 -c -q  # Should be 1,048,576
 
 # Test error handling
 bash netrange.sh 192.168.1.255 192.168.1.0 -o /tmp/test.txt  # Should fail

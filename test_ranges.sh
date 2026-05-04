@@ -30,19 +30,19 @@ echo "════════════════════════�
 # ─── 1. Basic range ──────────────────────────────────────────
 echo ""
 echo "▸ Basic range expansion"
-bash netrange.sh 172.16.10.0 172.16.10.255 -o test_range.txt -q
+bash netrange.sh 192.0.2.0 192.0.2.255 -o test_range.txt -q
 count=$(wc -l < test_range.txt)
 check "/24 range generates 256 IPs" "[ $count -eq 256 ]"
 first=$(head -1 test_range.txt)
 last=$(tail -1 test_range.txt)
-check "First IP: 172.16.10.0" "[ '$first' = '172.16.10.0' ]"
-check "Last IP: 172.16.10.255" "[ '$last' = '172.16.10.255' ]"
+check "First IP: 192.0.2.0" "[ '$first' = '192.0.2.0' ]"
+check "Last IP: 192.0.2.255" "[ '$last' = '192.0.2.255' ]"
 rm -f test_range.txt
 
 # ─── 2. CIDR notation ───────────────────────────────────────
 echo ""
 echo "▸ CIDR notation"
-bash netrange.sh 10.50.0.0/28 -o test_cidr.txt -q
+bash netrange.sh 198.51.100.0/28 -o test_cidr.txt -q
 count=$(wc -l < test_cidr.txt)
 check "CIDR /28 generates 16 IPs" "[ $count -eq 16 ]"
 rm -f test_cidr.txt
@@ -55,22 +55,22 @@ rm -f test_cidr24.txt
 # ─── 3. Stdout piping ───────────────────────────────────────
 echo ""
 echo "▸ Stdout piping"
-stdout_count=$(bash netrange.sh 172.20.0.0/30 -q | wc -l)
+stdout_count=$(bash netrange.sh 198.51.100.0/30 -q | wc -l)
 check "Pipe to stdout (4 IPs)" "[ $stdout_count -eq 4 ]"
 
 # ─── 4. Count-only mode ─────────────────────────────────────
 echo ""
 echo "▸ Count-only mode"
-cnt=$(bash netrange.sh 10.50.0.0/16 -c -q)
+cnt=$(bash netrange.sh 198.51.100.0/24 -c -q)
 check "Count /16 = 65,536" "[ '$cnt' = '65,536' ]"
 
-cnt=$(bash netrange.sh 172.16.0.0/12 -c -q)
+cnt=$(bash netrange.sh 192.0.2.0/24 -c -q)
 check "Count /12 = 1,048,576" "[ '$cnt' = '1,048,576' ]"
 
 # ─── 5. Exclude ranges ──────────────────────────────────────
 echo ""
 echo "▸ Exclude ranges"
-bash netrange.sh 10.0.0.0/24 -x 10.0.0.0/28 -o test_excl.txt -q
+bash netrange.sh 192.0.2.0/24 -x 192.0.2.0/28 -o test_excl.txt -q
 count=$(wc -l < test_excl.txt)
 check "Excluded /28 from /24 → 240 IPs" "[ $count -eq 240 ]"
 rm -f test_excl.txt
@@ -107,7 +107,7 @@ rm -f test_app.txt
 echo ""
 echo "▸ Large range performance"
 start_time=$(date +%s)
-bash netrange.sh 10.50.0.0/16 -o test_large.txt -q
+bash netrange.sh 198.51.100.0/24 -o test_large.txt -q
 end_time=$(date +%s)
 elapsed=$((end_time - start_time))
 count=$(wc -l < test_large.txt)
