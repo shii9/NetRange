@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-# NetRange v2.0 Development Makefile
+# NetRange v2.1.0 Development Makefile
 
 .PHONY: help install install-local test test-full bench lint verify clean
 
@@ -14,7 +14,7 @@ RED := \033[0;31m
 NC := \033[0m # No Color
 
 help:
-	@echo "$(BLUE)NetRange v2.0 Development Tasks$(NC)"
+	@echo "$(BLUE)NetRange v2.1.0 Development Tasks$(NC)"
 	@echo ""
 	@echo "$(YELLOW)Available targets:$(NC)"
 	@echo "  $(GREEN)help$(NC)              - Show this help message"
