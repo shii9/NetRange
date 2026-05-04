@@ -73,20 +73,20 @@ Before submitting a pull request:
 
 ```bash
 # Basic functionality
-netrange 192.168.1.0 192.168.1.10 -o test.txt
+netrange 127.0.5.0 127.0.5.0 -o test.txt
 
 # CIDR notation
-netrange 192.168.50.0/24 -o subnet.txt
+netrange 127.0.5.0/24 -o subnet.txt
 
 # Edge cases
 netrange 127.0.1.1 127.0.1.1 -o single.txt     # Single IP
-netrange 192.168.0.0 192.168.0.255 -o range.txt # Full /24
+netrange 127.0.5.0 127.0.5.0 -o range.txt # Full /24
 
 # Stdout piping
 netrange 127.0.2.0/28 -q | wc -l
 
 # Error handling
-netrange 192.168.1.255 192.168.1.0 -o invalid.txt # Reverse range
+netrange 127.0.5.0 127.0.5.0 -o invalid.txt # Reverse range
 netrange 256.1.1.1 256.1.1.10 -o badip.txt        # Invalid octets
 ```
 

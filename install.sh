@@ -176,7 +176,7 @@ verify_installation() {
 
   # Test execution
   info "Running sanity test..."
-  if netrange 203.0.113.0/30 -o /tmp/test_ips.txt -q 2>/dev/null; then
+  if netrange 127.0.4.0/30 -o /tmp/test_ips.txt -q 2>/dev/null; then
     local count
     count=$(wc -l < /tmp/test_ips.txt)
     success "Sanity test passed ($count IPs generated)"

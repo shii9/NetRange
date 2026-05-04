@@ -57,13 +57,13 @@ print("═" * 65)
 # ─── Test Group 1: Basic IP Range ────────────────────────────────────────────
 print("\n▸ Basic IP Range Expansion")
 
-rc, out, err = run("127.0.1.0 172.16.10.15 -o test_basic.txt -q")
+rc, out, err = run("127.0.1.0 127.0.1.0 -o test_basic.txt -q")
 test("Range expansion exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_basic.txt").read_text().strip().splitlines()
     test("Generates correct count (16 IPs)", len(lines) == 16, f"got {len(lines)}")
     test("First IP is 127.0.1.0", lines[0] == "127.0.1.0", lines[0])
-    test("Last IP is 172.16.10.15", lines[-1] == "172.16.10.15", lines[-1])
+    test("Last IP is 127.0.1.0", lines[-1] == "127.0.1.0", lines[-1])
 cleanup("test_basic.txt")
 
 # ─── Test Group 2: Single IP ────────────────────────────────────────────────
@@ -96,7 +96,7 @@ if rc == 0:
     test("/28 generates 16 IPs", len(lines) == 16, f"got {len(lines)}")
 cleanup("test_cidr28.txt")
 
-rc, out, err = run("192.168.50.128/32 -o test_cidr32.txt -q")
+rc, out, err = run("127.0.5.0/32 -o test_cidr32.txt -q")
 test("CIDR /32 exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_cidr32.txt").read_text().strip().splitlines()
@@ -162,7 +162,7 @@ test("Exclude exits cleanly", rc == 0, err)
 if rc == 0:
     lines = Path("test_excl.txt").read_text().strip().splitlines()
     test("Excluded /28 from /24 → 240 IPs", len(lines) == 240, f"got {len(lines)}")
-    test("First excluded IP absent", "10.0.0.0" not in lines)
+    test("First excluded IP absent", "127.0.2.0" not in lines)
     test("10.0.0.15 is absent", "10.0.0.15" not in lines)
     test("10.0.0.16 is present", "10.0.0.16" in lines)
 cleanup("test_excl.txt")
@@ -214,7 +214,7 @@ cleanup("test_dupes.txt", "test_uniq.txt")
 # ─── Test Group 14: Error Handling ──────────────────────────────────────────
 print("\n▸ Error Handling")
 
-rc, out, err = run("192.168.1.255 192.168.1.0 -o test_err.txt -q", expect_fail=True)
+rc, out, err = run("127.0.5.0 127.0.5.0 -o test_err.txt -q", expect_fail=True)
 test("Reversed range fails correctly", rc != 0)
 cleanup("test_err.txt")
 

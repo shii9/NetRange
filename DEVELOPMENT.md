@@ -166,7 +166,7 @@ bash netrange.sh 127.0.1.0/24 -x 127.0.1.0/28 -q | wc -l  # Should be 240
 bash netrange.sh 127.0.1.0/24 -c -q  # Should be 1,048,576
 
 # Test error handling
-bash netrange.sh 192.168.1.255 192.168.1.0 -o /tmp/test.txt  # Should fail
+bash netrange.sh 127.0.5.0 127.0.5.0 -o /tmp/test.txt  # Should fail
 bash netrange.sh invalid -o /tmp/test.txt  # Should fail
 ```
 

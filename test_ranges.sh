@@ -117,7 +117,7 @@ rm -f test_large.txt
 # ─── 10. Error handling ─────────────────────────────────────
 echo ""
 echo "▸ Error handling"
-bash netrange.sh 192.168.1.255 192.168.1.0 -o test_err.txt -q 2>/dev/null && echo "  ✗ Reversed range should fail" || { PASS=$((PASS + 1)); echo "  ✓ Reversed range rejected correctly"; }
+bash netrange.sh 127.0.5.0 127.0.5.0 -o test_err.txt -q 2>/dev/null && echo "  ✗ Reversed range should fail" || { PASS=$((PASS + 1)); echo "  ✓ Reversed range rejected correctly"; }
 rm -f test_err.txt
 
 bash netrange.sh 999.999.999.999 -o test_err.txt -q 2>/dev/null && echo "  ✗ Invalid IP should fail" || { PASS=$((PASS + 1)); echo "  ✓ Invalid IP rejected correctly"; }

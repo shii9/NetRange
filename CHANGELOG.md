@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.1.0
 ## [2.0.0] - 2026-05-03
 
 ### Added
-- **CIDR notation support** — expand subnets like `172.16.10.0/24` directly
+- **CIDR notation support** — expand subnets like `127.0.1.0/24` directly
 - **Stdout piping** — output to stdout by default when no `-o` is given
 - **Count-only mode** (`-c`) — quickly count IPs without generating files
 - **Exclude ranges** (`-x`) — filter out specific CIDRs or ranges from output

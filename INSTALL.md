@@ -115,7 +115,7 @@ bash install.sh --uninstall
 netrange --help
 
 # Test with small range
-netrange 192.168.1.0 192.168.1.10 -o test.txt
+netrange 127.0.5.0 127.0.5.0 -o test.txt
 
 # Use with other tools
 nmap -sn -iL test.txt
