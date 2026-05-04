@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bash 4.0+](https://img.shields.io/badge/Bash-4.0%2B-brightgreen)](https://www.gnu.org/software/bash/)
 [![Python 3.6+](https://img.shields.io/badge/Python-3.6%2B-blue)](https://www.python.org)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/shii9/NetRange)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/shii9/NetRange)
 
 **Professional tool for expanding IPv4 address ranges and CIDR notations into discrete IP addresses.**
 
@@ -59,16 +59,16 @@ sudo bash install.sh --uninstall
 
 ```bash
 # Expand a CIDR subnet
-netrange 127.0.1.0/24 -o subnet.txt
+netrange 172.16.10.0/24 -o subnet.txt
 
 # Expand a range
-netrange 127.0.2.0 127.0.2.255 -o targets.txt
+netrange 10.50.0.0 10.50.255.255 -o targets.txt
 
 # Pipe directly into nmap (no file needed)
-netrange 127.0.3.0/28 | nmap -sn -iL -
+netrange 203.0.113.0/28 | nmap -sn -iL -
 
 # Count IPs without generating
-netrange 127.0.1.0/24 -c
+netrange 172.16.0.0/12 -c
 
 # View help
 netrange --help
@@ -78,11 +78,11 @@ netrange --help
 
 | Feature | Description |
 |---------|-------------|
-| **CIDR Notation** | `netrange 127.0.1.0/24` — automatic subnet expansion |
-| **IP Ranges** | `netrange 127.0.2.0 127.0.2.255` — start-to-end expansion |
-| **Stdout Piping** | `netrange 127.0.3.0/28 \| nmap -sn -iL -` — no file required |
-| **Count-Only** | `netrange 127.0.1.0/24 -c` — instant IP count |
-| **Exclude Ranges** | `-x 127.0.1.0/24` — filter out specific subnets |
+| **CIDR Notation** | `netrange 172.16.10.0/24` — automatic subnet expansion |
+| **IP Ranges** | `netrange 10.50.0.0 10.50.255.255` — start-to-end expansion |
+| **Stdout Piping** | `netrange 203.0.113.0/28 \| nmap -sn -iL -` — no file required |
+| **Count-Only** | `netrange 172.16.0.0/12 -c` — instant IP count |
+| **Exclude Ranges** | `-x 10.0.0.0/24` — filter out specific subnets |
 | **Output Formats** | Plain, CSV, JSON, nmap-compatible |
 | **Shuffle Output** | `-s` — randomize IP order for stealth scanning |
 | **File Input** | `-f targets.txt` — batch processing from file |
@@ -109,13 +109,13 @@ netrange --help
 
 ```bash
 # CIDR notation (most common)
-netrange 127.0.1.0/24 -o output.txt
+netrange 172.16.10.0/24 -o output.txt
 
 # IP range (start-end)
-netrange 127.0.2.0 127.0.2.255 -o output.txt
+netrange 10.50.0.0 10.50.0.255 -o output.txt
 
 # Single IP
-netrange 127.0.3.42 -o output.txt
+netrange 203.0.113.42 -o output.txt
 
 # From file (one target per line, supports comments)
 netrange -f targets.txt -o output.txt
@@ -125,73 +125,73 @@ netrange -f targets.txt -o output.txt
 
 ```bash
 # Stdout (default when no -o given) — pipe-friendly
-netrange 127.0.2.0/24 | wc -l
+netrange 172.20.0.0/22 | wc -l
 
 # File output
-netrange 127.0.2.0/24 -o subnet.txt
+netrange 198.51.100.0/24 -o subnet.txt
 
 # Append to existing file
-netrange 127.0.1.0/24 -o targets.txt -a
+netrange 10.10.1.0/24 -o targets.txt -a
 
 # Count-only (no output file)
-netrange 127.0.1.0/24 -c
+netrange 172.16.0.0/12 -c
 ```
 
 ### Output Formats
 
 ```bash
 # Plain text — one IP per line (default)
-netrange 127.0.3.0/28 -o plain.txt
+netrange 203.0.113.0/28 -o plain.txt
 
 # CSV — ip,index columns with header
-netrange 127.0.3.0/28 -F csv -o report.csv
+netrange 203.0.113.0/28 -F csv -o report.csv
 
 # JSON — array of IP strings
-netrange 127.0.3.0/28 -F json -o data.json
+netrange 203.0.113.0/28 -F json -o data.json
 
 # Nmap — comma-separated, single line
-netrange 127.0.3.0/28 -F nmap -o targets.nmap
+netrange 203.0.113.0/28 -F nmap -o targets.nmap
 ```
 
 ### Advanced Features
 
 ```bash
 # Exclude specific subnets from a range
-netrange 127.0.2.0/24 -x 127.0.2.0/28 -x 127.0.2.16/28 -o filtered.txt
+netrange 10.0.0.0/16 -x 10.0.0.0/24 -x 10.0.1.0/24 -o filtered.txt
 
 # Shuffle for randomized scanning
-netrange 127.0.2.0/24 -s -o random_targets.txt
+netrange 172.20.0.0/22 -s -o random_targets.txt
 
 # Deduplicate overlapping inputs
 netrange -f overlapping_ranges.txt -u -o unique.txt
 
 # Progress bar for large ranges
-netrange 127.0.3.0/24 -o large.txt -p
+netrange 10.0.0.0/12 -o large.txt -p
 
 # Quiet mode (errors only)
-netrange 127.0.2.0/24 -o scan.txt -q
+netrange 198.51.100.0/24 -o scan.txt -q
 ```
 
 ### Integration with Security Tools
 
 ```bash
 # Port scanning with nmap
-netrange 127.0.1.0/24 | nmap -sn -iL -
+netrange 172.16.10.0/24 | nmap -sn -iL -
 
 # Mass scanning with masscan
-netrange 127.0.2.0/24 -o targets.txt && masscan -iL targets.txt -p80,443
+netrange 10.50.0.0/16 -o targets.txt && masscan -iL targets.txt -p80,443
 
 # Parallel HTTP probing
-netrange 127.0.3.0/28 | parallel -j 20 curl -sk https://{}
+netrange 203.0.113.0/28 | parallel -j 20 curl -sk https://{}
 
 # Reverse DNS with dig
-netrange 127.0.2.0/24 | parallel dig +short -x {}
+netrange 198.51.100.0/24 | parallel dig +short -x {}
 
 # Web testing with httpx
-netrange 127.0.1.0/24 | httpx -silent -status-code
+netrange 172.16.10.0/24 | httpx -silent -status-code
 
 # Subdomain brute-force preparation
-netrange 127.0.2.0/24 -F nmap | nmap -sL -iL -
+netrange 10.50.0.0/20 -F nmap | nmap -sL -iL -
 ```
 
 ### CLI Options
