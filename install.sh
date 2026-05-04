@@ -224,7 +224,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 printf "${CYAN}╔════════════════════════════════════════════════════════════════════╗\n"
-printf "║          ${BOLD}NetRange v2.1.0${NC}${CYAN} — Installation                ║\n"
+printf "║          ${BOLD}NetRange v2.1.0${NC}${CYAN} — Installation                        ║\n"
 printf "╚════════════════════════════════════════════════════════════════════╝${NC}\n"
 
 if [[ $UNINSTALL_MODE == true ]]; then
