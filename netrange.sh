@@ -33,7 +33,7 @@ USAGE
   netrange <start-ip> <end-ip> [options]
 
 INPUT FORMATS
-  CIDR notation          netrange 172.16.0.0/24
+  CIDR notation          netrange 127.0.1.0/24
   IP range               netrange 127.0.2.0 127.0.2.255
   From file              netrange -f targets.txt
 
@@ -72,6 +72,7 @@ PERFORMANCE
   /16 network   (65K IPs)      : ~0.3s  (buffered writes)
   /12 network   (1M IPs)       : ~5s    (buffered writes)
   /8  network   (16M IPs)      : ~60s   (buffered writes)
+EOF
 }
 
 # ============================================================================
